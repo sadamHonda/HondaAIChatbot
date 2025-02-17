@@ -72,7 +72,7 @@ fun MessageList(modifier: Modifier = Modifier,messageList : List<MessageModel>) 
                 contentDescription = "Icon",
                 tint = Purple80,
             )
-            Text(text = "Hi! This is Honda's customer care service. How may I help you? ",
+            Text(text = "Hi! This is Outro's customer care service. How may I help you? ",
                 fontSize = 22.sp,
                 textAlign = TextAlign.Center)
         }
@@ -179,7 +179,7 @@ fun AppHeader() {
     ) {
         Text(
             modifier = Modifier.padding(16.dp),
-            text = "Honda Customer Care",
+            text = "Customer Care",
             color = Color.White,
             fontSize = 22.sp
         )
