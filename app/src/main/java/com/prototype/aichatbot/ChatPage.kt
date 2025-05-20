@@ -72,7 +72,7 @@ fun MessageList(modifier: Modifier = Modifier,messageList : List<MessageModel>) 
                 contentDescription = "Icon",
                 tint = Purple80,
             )
-            Text(text = "Hi! This is Outro's customer care service. How may I help you? ",
+            Text(text = "こんにちは！HondaのAIチャットボットです。何かご用件はございますか？",
                 fontSize = 22.sp,
                 textAlign = TextAlign.Center)
         }
@@ -179,7 +179,7 @@ fun AppHeader() {
     ) {
         Text(
             modifier = Modifier.padding(16.dp),
-            text = "Customer Care",
+            text = "Honda二輪車カスタマーサポート",
             color = Color.White,
             fontSize = 22.sp
         )
