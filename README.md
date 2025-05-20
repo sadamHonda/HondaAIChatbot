@@ -1,97 +1,95 @@
-# Honda Two-Wheeler AI Chatbot
+# Honda二輪車AIチャットボット
 
-This Android application implements a specialized AI chatbot focused on Honda two-wheeler products. It leverages Google's Gemini Pro API for conversational AI capabilities and is built using Kotlin and Jetpack Compose for the user interface. The chatbot is designed to understand and respond *exclusively in Japanese* to queries related to Honda's two-wheeler lineup.
+このAndroidアプリケーションは、Hondaの二輪車製品に特化したAIチャットボットを実装しています。会話型AI機能にはGoogleのGemini Pro APIを活用し、ユーザーインターフェースはKotlinとJetpack Composeを使用して構築されています。チャットボットは、Hondaの二輪車製品ラインナップに関する問い合わせに対し、*日本語のみ*で理解し応答するように設計されています。
 
-## Screenshots 
+## スクリーンショット
 
 ![image](https://github.com/user-attachments/assets/2db9a738-3a45-4523-aa85-a7ce4612720c)
 
-## Features
+## 機能
 
-*   **Specialized AI:** The chatbot is configured with a system prompt to act as a Japanese AI customer specializing *exclusively* in Honda two-wheeler products.
-*   **Japanese Language Only:** All responses from the AI are in Japanese.
-*   **Chat Interface:** A simple and intuitive chat interface for users to ask questions.
-*   **Message History:** The conversation history is maintained and sent to the AI for contextual responses.
-*   **Real-time Updates:** The UI updates dynamically as messages are sent and received.
-*   **"Typing..." Indicator:** Shows a "Typing..." message while waiting for the AI's response.
-*   **Error Handling:** Basic error handling for API requests, displaying an error message to the user.
-*   **Jetpack Compose UI:** The entire UI is built using modern Android declarative UI toolkit.
+*   **特化型AI:** チャットボットは、Hondaの二輪車製品に*特化*した日本のAIカスタマーとして機能するよう、システムプロンプトで設定されています。
+*   **日本語のみ:** AIからのすべての応答は日本語で行われます。
+*   **チャットインターフェース:** ユーザーが質問をするためのシンプルで直感的なチャットインターフェースです。
+*   **メッセージ履歴:** 会話履歴は維持され、文脈に応じた応答のためにAIに送信されます。
+*   **リアルタイム更新:** メッセージの送受信に応じてUIが動的に更新されます。
+*   **「入力中...」インジケーター:** AIの応答を待っている間、「入力中...」というメッセージが表示されます。
+*   **エラー処理:** APIリクエストの基本的なエラー処理を行い、ユーザーにエラーメッセージを表示します。
+*   **Jetpack Compose UI:** UI全体が最新のAndroid宣言的UIツールキットを使用して構築されています。
 
-## Core Components
+## 主要コンポーネント
 
 <img width="782" alt="Screenshot 2025-05-20 at 5 26 19 PM" src="https://github.com/user-attachments/assets/d30e6a39-2cdd-44ff-94af-c35b8cf3fb5e" />
 
+このアプリケーションは、いくつかの主要コンポーネントを中心に構成されています。
 
-The application is structured around several key components:
-
-1.  **`ChatViewModel.kt`**: The ViewModel responsible for managing the chat state and business logic.
-    *   `messageList`: A `mutableStateListOf<MessageModel>` that holds all messages in the chat. This being a `mutableStateListOf` ensures Compose UI updates when messages are added or removed.
-    *   `initialSystemPrompt`: A predefined string that instructs the Gemini model on its persona and limitations (Honda two-wheelers, Japanese language only).
-    *   `generativeModel`: An instance of `GenerativeModel` from the Google Generative AI SDK, configured with:
+1.  **`ChatViewModel.kt`**: チャットの状態とビジネスロジックを管理するViewModelです。
+    *   `messageList`: チャット内のすべてのメッセージを保持する`mutableStateListOf<MessageModel>`です。`mutableStateListOf`であるため、メッセージが追加または削除されるとCompose UIが更新されます。
+    *   `initialSystemPrompt`: Geminiモデルにそのペルソナと制約（Honda二輪車、日本語のみ）を指示する事前定義された文字列です。
+    *   `generativeModel`: Google Generative AI SDKの`GenerativeModel`インスタンスで、以下のように設定されています。
         *   `modelName`: "gemini-1.5-pro-latest"
-        *   `apiKey`: Your Google AI Studio API key (should be stored in `Constants.apiKey`).
-        *   `systemInstruction`: The `initialSystemPrompt` is passed here.
+        *   `apiKey`: あなたのGoogle AI Studio APIキー（`Constants.apiKey`に保存する必要があります）。
+        *   `systemInstruction`: ここに`initialSystemPrompt`が渡されます。
     *   `sendMessage(question: String)`:
-        *   Launches a coroutine in `viewModelScope`.
-        *   Constructs `chatHistory` from the current `messageList`.
-        *   Adds the user's `question` and a temporary "Typing...." message to `messageList`.
-        *   Starts a new chat session with `generativeModel.startChat(history = chatHistory)`.
-        *   Sends the user's `question` to the chat session.
-        *   Removes the "Typing...." message and adds the AI's `response.text`.
-        *   Includes a `try-catch` block to handle exceptions during the API call, displaying an error message if one occurs.
+        *   `viewModelScope`内でコルーチンを起動します。
+        *   現在の`messageList`から`chatHistory`を構築します。
+        *   ユーザーの`question`と一時的な「入力中...」メッセージを`messageList`に追加します。
+        *   `generativeModel.startChat(history = chatHistory)`で新しいチャットセッションを開始します。
+        *   ユーザーの`question`をチャットセッションに送信します。
+        *   「入力中...」メッセージを削除し、AIの`response.text`を追加します。
+        *   API呼び出し中の例外を処理するための`try-catch`ブロックを含み、エラーが発生した場合はエラーメッセージを表示します。
 
-2.  **UI Composables (likely in `ChatScreen.kt` or similar, or directly in `MainActivity.kt` as shown):**
-    *   **`ChatPage(viewModel: ChatViewModel)`**: The main composable function for the chat screen.
-        *   Arranges `AppHeader`, `MessageList`, and `MessageInput` in a `Column`.
-    *   **`AppHeader()`**: A simple composable displaying the application title "Honda二輪車カスタマーサポート" (Honda Two-Wheeler Customer Support) in a styled `Box`.
+2.  **UIコンポーザブル (通常 `ChatScreen.kt` のようなファイル、または示されているように `MainActivity.kt` に直接記述):**
+    *   **`ChatPage(viewModel: ChatViewModel)`**: チャット画面のメインとなるコンポーザブル関数です。
+        *   `AppHeader`、`MessageList`、`MessageInput`を`Column`内に配置します。
+    *   **`AppHeader()`**: アプリケーションのタイトル「Honda二輪車カスタマーサポート」をスタイル付きの`Box`に表示するシンプルなコンポーザブルです。
     *   **`MessageList(messageList: List<MessageModel>)`**:
-        *   Displays a welcome message and icon if `messageList` is empty.
-        *   Uses a `LazyColumn` to efficiently display the list of messages in reverse order (latest at the bottom).
-        *   Iterates through `messageList.reversed()` and calls `MessageRow` for each message.
+        *   `messageList`が空の場合、ウェルカムメッセージとアイコンを表示します。
+        *   `LazyColumn`を使用してメッセージのリストを逆順（最新のものが一番下）で効率的に表示します。
+        *   `messageList.reversed()`を反復処理し、各メッセージに対して`MessageRow`を呼び出します。
     *   **`MessageRow(messageModel: MessageModel)`**:
-        *   Displays a single message.
-        *   Aligns user messages to the right and model (AI) messages to the left.
-        *   Uses different background colors (`ColorUserMessage`, `ColorModelMessage`) for user and model messages.
-        *   Wraps the message text in a `SelectionContainer` to allow users to copy the text.
+        *   単一のメッセージを表示します。
+        *   ユーザーメッセージを右に、モデル（AI）メッセージを左に揃えます。
+        *   ユーザーとモデルのメッセージに異なる背景色（`ColorUserMessage`, `ColorModelMessage`）を使用します。
+        *   メッセージテキストを`SelectionContainer`でラップし、ユーザーがテキストをコピーできるようにします。
     *   **`MessageInput(onMessageSend: (String) -> Unit)`**:
-        *   Provides an `OutlinedTextField` for the user to type their message.
-        *   Includes an `IconButton` with a "Send" icon to trigger the `onMessageSend` callback.
-        *   Clears the input field after a message is sent.
+        *   ユーザーがメッセージを入力するための`OutlinedTextField`を提供します。
+        *   `onMessageSend`コールバックをトリガーするための「送信」アイコンが付いた`IconButton`を含みます。
+        *   メッセージ送信後に入力フィールドをクリアします。
 
 3.  **`MessageModel.kt`**:
-    *   A simple `data class` to represent a single chat message.
-        *   `message: String`: The content of the message.
-        *   `role: String`: The sender of the message ("user" or "model").
+    *   単一のチャットメッセージを表すシンプルな`data class`です。
+        *   `message: String`: メッセージの内容。
+        *   `role: String`: メッセージの送信者（"user" または "model"）。
 
 4.  **`MainActivity.kt`**:
-    *   The main entry point of the application.
-    *   Initializes `ChatViewModel` using `ViewModelProvider`.
-    *   Sets up the main UI content using `AIChatbotTheme` and a `Scaffold`.
-    *   Calls the `ChatPage` composable to display the chat interface.
+    *   アプリケーションのメインエントリーポイントです。
+    *   `ViewModelProvider`を使用して`ChatViewModel`を初期化します。
+    *   `AIChatbotTheme`と`Scaffold`を使用してメインUIコンテンツを設定します。
+    *   `ChatPage`コンポーザブルを呼び出してチャットインターフェースを表示します。
 
+## セットアップと設定
 
-## Setup and Configuration
-
-1.  **API Key**:
-    *   You need a Google AI Studio API key for the Gemini Pro model.
-    *   This key should be placed in a `Constants.kt` file (or a similar configuration file) in your project:
+1.  **APIキー**:
+    *   Gemini Proモデル用のGoogle AI Studio APIキーが必要です。
+    *   このキーは、プロジェクト内の`Constants.kt`ファイル（または同様の設定ファイル）に配置する必要があります。
         ```kotlin
-        // Create a file named Constants.kt (e.g., in your main package)
+        // Constants.ktという名前のファイルを作成します（例：メインパッケージ内）
         object Constants {
-            const val apiKey = "YOUR_GEMINI_API_KEY"
+            const val apiKey = "YOUR_GEMINI_API_KEY" // ここにあなたのAPIキーを入力
         }
         ```
-    *   **Important**: Add `Constants.kt` to your `.gitignore` file to avoid committing your API key to version control.
+    *   **重要**: APIキーをバージョン管理にコミットしないように、`Constants.kt`を`.gitignore`ファイルに追加してください。
 
-2.  **Dependencies**:
-    *   Ensure you have the necessary Google Generative AI SDK dependency in your `build.gradle` (Module: app) file:
+2.  **依存関係**:
+    *   必要なGoogle Generative AI SDKの依存関係が`build.gradle`（モジュール: app）ファイルにあることを確認してください。
         ```gradle
         dependencies {
-            // ... other dependencies
-            implementation("com.google.ai.client.generativeai:generativeai:0.3.0") // Check for the latest version
+            // ... 他の依存関係
+            implementation("com.google.ai.client.generativeai:generativeai:0.3.0") // 最新バージョンを確認してください
         }
         ```
-    *   Also, ensure you have internet permission in your `AndroidManifest.xml`:
+    *   また、`AndroidManifest.xml`にインターネット権限があることを確認してください。
         ```xml
         <uses-permission android:name="android.permission.INTERNET"/>
         ```
